@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { Home, Compass, FolderKanban, MessageSquare, Bell, User, Settings, ChevronRight, LogOut, Sparkles } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const navItems = [
   { icon: Home, label: 'Home', path: '/dashboard', badge: null },
@@ -13,6 +13,7 @@ const navItems = [
 
 export const Sidebar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   return (
     <aside className="w-64 h-screen fixed left-0 top-0 border-r border-devshare-border bg-devshare-bg flex flex-col">
@@ -84,7 +85,10 @@ export const Sidebar = () => {
 
       {/* User Profile Footer */}
       <div className="px-4 py-4 border-t border-devshare-border/50">
-        <div className="flex items-center gap-3 p-3 rounded-xl hover:bg-devshare-panel_hover transition-colors cursor-pointer group">
+        <div
+          onClick={() => navigate('/login')}
+          className="flex items-center gap-3 p-3 rounded-xl hover:bg-devshare-panel_hover transition-colors cursor-pointer group"
+        >
           <div className="relative flex-shrink-0">
             <div className="w-9 h-9 rounded-full overflow-hidden border border-devshare-border bg-[#fde1c3]">
               <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Alex&backgroundColor=b6e3f4" alt="Alex Rivera" className="w-full h-full object-cover" />
@@ -95,7 +99,7 @@ export const Sidebar = () => {
             <h4 className="text-sm font-bold truncate group-hover:text-devshare-blue transition-colors">Alex Rivera</h4>
             <p className="text-xs text-devshare-text_secondary truncate">Fullstack Dev</p>
           </div>
-          <LogOut className="w-4 h-4 text-devshare-text_secondary opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+          <LogOut className="w-4 h-4 text-red-400 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
         </div>
       </div>
     </aside>
