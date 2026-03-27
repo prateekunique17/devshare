@@ -5,14 +5,14 @@ import { communityGems } from '../data';
 export const CommunityGems = () => {
   return (
     <section>
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-black flex items-center gap-2">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+        <h2 className="text-xl font-black flex items-center gap-2 whitespace-nowrap">
           <Gem className="w-5 h-5 text-blue-400" />
           Top Community Gems
         </h2>
-        <div className="flex items-center gap-2 text-sm">
-          <span className="text-devshare-text_secondary">Sort:</span>
-          <button className="font-bold text-devshare-blue bg-devshare-blue/10 px-3 py-1.5 rounded-lg hover:bg-devshare-blue/20 transition-colors">
+        <div className="flex items-center gap-2 text-sm w-full sm:w-auto overflow-x-auto pb-1 scrollbar-hide">
+          <span className="text-devshare-text_secondary whitespace-nowrap">Sort:</span>
+          <button className="whitespace-nowrap font-bold text-devshare-blue bg-devshare-blue/10 px-3 py-1.5 rounded-lg hover:bg-devshare-blue/20 transition-colors">
             Most Popular
           </button>
         </div>
@@ -82,21 +82,21 @@ export const CommunityGems = () => {
               </div>
 
               {/* Footer Stats */}
-              <div className="flex items-center justify-between pt-4 border-t border-devshare-border/40">
-                <div className="flex items-center gap-4 text-xs font-semibold text-devshare-text_secondary">
-                  <div className="flex items-center gap-1.5 hover:text-orange-400 transition-colors cursor-pointer">
-                    <Zap className="w-4 h-4 fill-orange-400 text-orange-400" />
+              <div className="flex items-center justify-between pt-4 border-t border-devshare-border/40 gap-3">
+                <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-[10px] sm:text-xs font-semibold text-devshare-text_secondary">
+                  <div className="flex items-center gap-1 sm:gap-1.5 hover:text-orange-400 transition-colors cursor-pointer whitespace-nowrap">
+                    <Zap className="w-3.5 sm:w-4 h-3.5 sm:h-4 fill-orange-400 text-orange-400" />
                     {gem.stats.likes}
                   </div>
                   {gem.stats.downloads && (
-                    <div className="flex items-center gap-1.5 hover:text-white transition-colors cursor-pointer">
-                      <Download className="w-4 h-4" />
+                    <div className="flex items-center gap-1 sm:gap-1.5 hover:text-white transition-colors cursor-pointer whitespace-nowrap">
+                      <Download className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
                       {gem.stats.downloads}
                     </div>
                   )}
                   {gem.stats.comments && (
-                    <div className="flex items-center gap-1.5 hover:text-white transition-colors cursor-pointer">
-                      <MessageSquare className="w-4 h-4" />
+                    <div className="flex items-center gap-1 sm:gap-1.5 hover:text-white transition-colors cursor-pointer whitespace-nowrap">
+                      <MessageSquare className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
                       {gem.stats.comments}
                     </div>
                   )}

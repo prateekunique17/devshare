@@ -7,7 +7,7 @@ import { Footer } from './components/Footer';
 
 export const LandingPage = () => {
   return (
-    <div className="min-h-screen text-devshare-text_primary bg-devshare-bg font-inter selection:bg-devshare-blue/30 selection:text-white">
+    <div className="min-h-screen text-devshare-text_primary bg-devshare-bg font-inter selection:bg-devshare-blue/30 selection:text-white overflow-x-hidden">
       <Navbar />
       <main>
         <HeroSection />

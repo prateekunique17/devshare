@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 
 export const LoginPage = () => {
   return (
-    <div className="min-h-screen bg-devshare-bg flex flex-col font-inter selection:bg-devshare-blue/30 selection:text-white">
+    <div className="min-h-screen bg-devshare-bg flex flex-col font-inter selection:bg-devshare-blue/30 selection:text-white relative overflow-hidden">
       {/* Header */}
-      <header className="px-8 py-6 flex items-center justify-between z-10">
+      <header className="px-4 md:px-8 py-6 flex items-center justify-between z-10">
         <Link to="/" className="flex items-center gap-2 font-bold text-xl tracking-tight text-white hover:text-devshare-blue transition-colors">
           <div className="w-6 h-6 bg-devshare-blue rounded flex items-center justify-center text-xs font-black text-white">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -29,7 +29,7 @@ export const LoginPage = () => {
       </main>
 
       {/* Footer */}
-      <footer className="px-8 py-8 flex flex-col md:flex-row items-center justify-between text-xs font-medium text-devshare-text_secondary relative z-10">
+      <footer className="px-4 md:px-8 py-8 flex flex-col md:flex-row items-center justify-between text-xs font-medium text-devshare-text_secondary relative z-10">
         <div className="flex items-center gap-6 mb-4 md:mb-0">
           <span>© 2024 DevShare Inc.</span>
           <a href="#" className="hover:text-white transition-colors">Status</a>
@@ -43,7 +43,7 @@ export const LoginPage = () => {
       </footer>
 
       {/* Background glow effects */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-devshare-blue/[0.02] blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[800px] aspect-square bg-devshare-blue/[0.02] blur-[120px] rounded-full pointer-events-none" />
     </div>
   );
 };

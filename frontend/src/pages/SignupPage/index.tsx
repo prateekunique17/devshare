@@ -5,9 +5,9 @@ import { Check } from 'lucide-react';
 
 export const SignupPage = () => {
   return (
-    <div className="min-h-screen bg-devshare-bg flex flex-col font-inter selection:bg-devshare-blue/30 selection:text-white">
+    <div className="min-h-screen bg-devshare-bg flex flex-col font-inter selection:bg-devshare-blue/30 selection:text-white relative overflow-hidden">
       {/* Header */}
-      <header className="px-8 py-6 flex items-center justify-between z-10">
+      <header className="px-4 md:px-8 py-6 flex items-center justify-between z-10 w-full overflow-x-hidden">
         <Link to="/" className="flex items-center gap-2 font-bold text-xl tracking-tight text-white hover:text-devshare-blue transition-colors">
           <div className="w-6 h-6 bg-devshare-blue rounded flex items-center justify-center text-xs font-black text-white">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -16,9 +16,9 @@ export const SignupPage = () => {
           </div>
           DevShare
         </Link>
-        <div className="text-sm text-devshare-text_secondary font-medium">
-          Already have an account?{' '}
-          <Link to="/login" className="text-devshare-blue font-semibold hover:text-devshare-blue_hover transition-colors px-4 border border-devshare-blue rounded-md py-2 ml-2">
+        <div className="text-sm text-devshare-text_secondary font-medium flex items-center">
+          <span className="hidden sm:inline">Already have an account?{' '}</span>
+          <Link to="/login" className="text-devshare-blue font-semibold hover:text-devshare-blue_hover transition-colors px-3 sm:px-4 border border-devshare-blue rounded-md py-1.5 sm:py-2 ml-2 whitespace-nowrap">
             Log In
           </Link>
         </div>
@@ -96,7 +96,7 @@ export const SignupPage = () => {
       </footer>
 
       {/* Background glow effects */}
-      <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[600px] h-[600px] bg-devshare-blue/[0.03] blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-full max-w-[600px] aspect-square bg-devshare-blue/[0.03] blur-[120px] rounded-full pointer-events-none" />
     </div>
   );
 };

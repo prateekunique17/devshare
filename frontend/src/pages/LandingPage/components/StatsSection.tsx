@@ -11,7 +11,7 @@ export const StatsSection = () => {
   return (
     <section className="py-20 border-y border-devshare-border/50 bg-[#0c1218]">
       <div className="max-w-6xl mx-auto px-4">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4 text-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-4 text-center">
           {stats.map((stat, i) => (
             <motion.div 
               key={i}

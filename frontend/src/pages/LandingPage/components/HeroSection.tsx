@@ -6,7 +6,7 @@ export const HeroSection = () => {
   return (
     <section className="pt-32 pb-20 px-4 min-h-screen flex flex-col items-center text-center relative overflow-hidden">
       {/* Background glow effects */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-devshare-blue/10 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-full max-w-[800px] h-[500px] bg-devshare-blue/10 blur-[120px] rounded-full pointer-events-none" />
       
       <motion.div 
         initial={{ y: 20, opacity: 0 }}

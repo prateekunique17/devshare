@@ -102,8 +102,8 @@ export const FeedPostCard = ({ post }: PostProps) => {
       </div>
 
       {/* Card Footer */}
-      <div className="flex items-center justify-between px-5 py-3.5 border-t border-devshare-border/40 bg-devshare-panel/20">
-        <div className="flex gap-1">
+      <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-3.5 border-t border-devshare-border/40 bg-devshare-panel/20">
+        <div className="flex flex-wrap gap-1">
           <motion.button
             whileTap={{ scale: 0.90 }}
             onClick={handleLike}

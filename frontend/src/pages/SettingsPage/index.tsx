@@ -10,6 +10,7 @@ import {
   WhoCanViewPanel, ManageAccountPanel, InterestedTechPanel,
   AppearancePanel, SessionsPanel,
 } from './panels/OtherPanels';
+import { MobileNav } from '../../components/MobileNav';
 
 const panelMap: Record<string, React.FC> = {
   'language': LanguagePanel,
@@ -35,9 +36,23 @@ export const SettingsPage = () => {
   return (
     <div className="min-h-screen bg-devshare-bg text-devshare-text_primary font-inter">
       <Sidebar />
-      <div className="ml-64 flex min-h-screen">
-        {/* Settings Navigation */}
-        <aside className="w-64 border-r border-devshare-border bg-[#0b1016] flex-shrink-0">
+      <MobileNav />
+      <div className="md:ml-64 flex min-h-screen pb-16 md:pb-0">
+        {/* Mobile Section Dropdown */}
+        <div className="md:hidden w-full px-6 py-4 border-b border-devshare-border/40 fixed top-0 bg-[#0b1016] z-40 max-w-[100vw] box-border">
+          <select 
+            value={activeSection}
+            onChange={(e) => setActiveSection(e.target.value)}
+            className="w-full bg-[#121820] border border-devshare-border/60 rounded-xl py-3 px-4 text-sm text-white font-bold focus:outline-none focus:border-devshare-blue appearance-none"
+          >
+            {settingsSections.map(s => (
+              <option key={s.id} value={s.id}>{s.label}</option>
+            ))}
+          </select>
+        </div>
+
+        {/* Desktop Settings Navigation */}
+        <aside className="hidden md:block w-64 border-r border-devshare-border bg-[#0b1016] flex-shrink-0">
           <div className="fixed top-0 w-64 h-screen overflow-y-auto">
             <div className="p-6 pb-3">
               <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-devshare-text_secondary">
@@ -68,13 +83,13 @@ export const SettingsPage = () => {
         </aside>
 
         {/* Active Panel */}
-        <main className="flex-1 overflow-y-auto">
+        <main className="flex-1 overflow-y-auto mt-20 md:mt-0">
           <motion.div
             key={activeSection}
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
-            className="max-w-3xl mx-auto px-10 py-10"
+            className="max-w-3xl mx-auto px-6 md:px-10 py-10"
           >
             <ActivePanel />
           </motion.div>

@@ -9,26 +9,26 @@ export const MainFeed = () => {
   const [activeTab, setActiveTab] = useState<'all' | 'code'>('all');
 
   return (
-    <div className="p-8 max-w-3xl mx-auto">
+    <div className="p-4 sm:p-8 max-w-3xl mx-auto">
       <motion.header
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
-        className="flex items-start justify-between mb-10"
+        className="flex items-start justify-between mb-6 sm:mb-10 w-full"
       >
-        <div>
+        <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2 mb-1">
             <span className="text-[10px] font-black tracking-[0.25em] text-devshare-blue uppercase">Dashboard</span>
           </div>
-          <h1 className="text-4xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-white/70 mb-2">
+          <h1 className="text-2xl sm:text-4xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-white/70 mb-2 truncate">
             Welcome back, Alex!
           </h1>
-          <p className="text-devshare-text_secondary font-medium">Here's what's happening in your network today.</p>
+          <p className="text-sm sm:text-base text-devshare-text_secondary font-medium truncate">Here's what's happening in your network today.</p>
         </div>
         <motion.button
           whileHover={{ scale: 1.04 }}
           whileTap={{ scale: 0.96 }}
-          className="bg-gradient-to-r from-devshare-blue to-blue-600 hover:from-devshare-blue_hover hover:to-blue-700 text-white px-5 py-2.5 rounded-xl font-bold flex items-center gap-2 shadow-lg shadow-devshare-blue/30 transition-all text-sm"
+          className="hidden sm:flex bg-gradient-to-r from-devshare-blue to-blue-600 hover:from-devshare-blue_hover hover:to-blue-700 text-white px-5 py-2.5 rounded-xl font-bold items-center gap-2 shadow-lg shadow-devshare-blue/30 transition-all text-sm flex-shrink-0 ml-4"
         >
           <Plus className="w-4 h-4" />
           New Project
@@ -38,15 +38,15 @@ export const MainFeed = () => {
       <StatsRow />
 
       <div className="mt-12">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-lg font-black tracking-tight flex items-center gap-2">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+          <h2 className="text-lg font-black tracking-tight flex items-center gap-2 whitespace-nowrap">
             <Flame className="w-5 h-5 text-orange-400" />
             Recent Project Shares
           </h2>
-          <div className="flex bg-devshare-panel/60 p-1 rounded-xl border border-devshare-border gap-1">
+          <div className="flex bg-devshare-panel/60 p-1 rounded-xl border border-devshare-border gap-1 w-full sm:w-auto">
             <button
               onClick={() => setActiveTab('all')}
-              className={`px-4 py-1.5 text-xs font-bold rounded-lg transition-all duration-200 ${
+              className={`flex-1 sm:flex-none px-4 py-1.5 text-[10px] sm:text-xs font-bold rounded-lg transition-all duration-200 ${
                 activeTab === 'all'
                   ? 'bg-devshare-blue text-white shadow-md shadow-devshare-blue/30'
                   : 'text-devshare-text_secondary hover:text-white'
@@ -56,14 +56,14 @@ export const MainFeed = () => {
             </button>
             <button
               onClick={() => setActiveTab('code')}
-              className={`px-4 py-1.5 text-xs font-bold rounded-lg transition-all duration-200 flex items-center gap-1 ${
+              className={`flex-1 sm:flex-none px-4 py-1.5 text-[10px] sm:text-xs font-bold rounded-lg transition-all duration-200 flex items-center justify-center gap-1 ${
                 activeTab === 'code'
                   ? 'bg-devshare-blue text-white shadow-md shadow-devshare-blue/30'
                   : 'text-devshare-text_secondary hover:text-white'
               }`}
             >
               <Code2 className="w-3 h-3" />
-              Only Code
+              <span>Only Code</span>
             </button>
           </div>
         </div>

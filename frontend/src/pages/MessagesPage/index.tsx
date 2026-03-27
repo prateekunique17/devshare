@@ -3,17 +3,19 @@ import { motion } from 'framer-motion';
 import { MessageSquare, Search, Edit, Send, Paperclip, MoreVertical, Phone, Video } from 'lucide-react';
 import { conversations, activeChatHistory } from './data';
 import { useState } from 'react';
+import { MobileNav } from '../../components/MobileNav';
 
 export const MessagesPage = () => {
-  const [activeChatId, setActiveChatId] = useState(1);
+  const [activeChatId, setActiveChatId] = useState<number | null>(null);
   const activeUser = conversations.find(c => c.id === activeChatId);
 
   return (
     <div className="min-h-screen bg-devshare-bg text-devshare-text_primary font-inter">
       <Sidebar />
-      <div className="ml-64 flex h-screen overflow-hidden">
+      <MobileNav />
+      <div className="md:ml-64 flex h-screen overflow-hidden pb-16 md:pb-0">
         {/* Messages List Sidebar */}
-        <aside className="w-80 border-r border-devshare-border bg-[#0b1016] flex flex-col h-full flex-shrink-0">
+        <aside className={`w-full md:w-80 border-r border-devshare-border bg-[#0b1016] flex-col h-full flex-shrink-0 ${activeChatId ? 'hidden md:flex' : 'flex'}`}>
           <div className="p-6 border-b border-devshare-border/40">
             <div className="flex items-center justify-between mb-6">
               <h1 className="text-2xl font-black text-white">Messages</h1>
@@ -77,10 +79,16 @@ export const MessagesPage = () => {
 
         {/* Active Chat Area */}
         {activeUser ? (
-          <main className="flex-1 flex flex-col bg-devshare-bg relative h-full">
+          <main className={`flex-1 flex flex-col bg-devshare-bg relative h-full ${!activeChatId ? 'hidden md:flex' : 'flex'}`}>
             {/* Chat Header */}
-            <div className="flex items-center justify-between px-8 py-5 border-b border-devshare-border/40 bg-[#0d131a] flex-shrink-0">
-              <div className="flex items-center gap-4">
+            <div className="flex items-center justify-between px-4 md:px-8 py-5 border-b border-devshare-border/40 bg-[#0d131a] flex-shrink-0">
+              <div className="flex items-center gap-3 md:gap-4">
+                <button 
+                  onClick={() => setActiveChatId(null)}
+                  className="md:hidden p-2 -ml-2 text-devshare-text_secondary hover:text-white"
+                >
+                  <Search className="w-5 h-5 rotate-180" /> {/* Hack for back arrow */}
+                </button>
                 <div className="w-10 h-10 rounded-full overflow-hidden bg-[#fde1c3]">
                   <img src={activeUser.avatar} alt={activeUser.user} className="w-full h-full object-cover" />
                 </div>
@@ -158,7 +166,7 @@ export const MessagesPage = () => {
             </div>
           </main>
         ) : (
-          <main className="flex-1 flex flex-col items-center justify-center bg-devshare-bg relative">
+          <main className="flex-1 hidden md:flex flex-col items-center justify-center bg-devshare-bg relative">
             <div className="text-center">
               <div className="w-16 h-16 bg-devshare-blue/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-devshare-blue/20">
                   <MessageSquare className="w-8 h-8 text-devshare-blue" />

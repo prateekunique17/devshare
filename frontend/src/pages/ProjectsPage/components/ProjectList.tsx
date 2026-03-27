@@ -24,32 +24,34 @@ export const ProjectList = ({ activeFilter }: Props) => {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: i * 0.08 }}
-          className="bg-[#0f141b] border border-devshare-border/60 hover:border-devshare-border rounded-2xl p-7 group hover:shadow-xl hover:shadow-black/20 transition-all cursor-pointer"
+          className="bg-[#0f141b] border border-devshare-border/60 hover:border-devshare-border rounded-2xl p-5 sm:p-7 group hover:shadow-xl hover:shadow-black/20 transition-all cursor-pointer"
         >
           {/* Top Row */}
-          <div className="flex items-start justify-between mb-4">
-            <div className="flex items-center gap-4">
-              <div className={`w-14 h-14 rounded-2xl ${project.iconBg} flex items-center justify-center text-2xl shadow-lg flex-shrink-0`}>
+          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-4">
+            <div className="flex items-center gap-4 min-w-0">
+              <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl ${project.iconBg} flex items-center justify-center text-xl sm:text-2xl shadow-lg flex-shrink-0`}>
                 {project.iconEmoji}
               </div>
-              <div>
-                <h3 className="text-lg font-black text-white group-hover:text-devshare-blue transition-colors leading-tight">
+              <div className="min-w-0">
+                <h3 className="text-base sm:text-lg font-black text-white group-hover:text-devshare-blue transition-colors leading-tight truncate">
                   {project.name}
                 </h3>
               </div>
             </div>
-            <span className={`px-3 py-1 text-[10px] font-black uppercase tracking-wider rounded-full ${project.badgeColor}`}>
-              {project.badge}
-            </span>
+            <div className="flex-shrink-0">
+              <span className={`px-3 py-1 text-[10px] font-black uppercase tracking-wider rounded-full ${project.badgeColor} whitespace-nowrap`}>
+                {project.badge}
+              </span>
+            </div>
           </div>
 
           {/* Description */}
-          <p className="text-sm text-devshare-text_secondary leading-relaxed mb-5 ml-[4.5rem]">
+          <p className="text-sm text-devshare-text_secondary leading-relaxed mb-5 sm:ml-[4.5rem]">
             {project.description}
           </p>
 
           {/* Tags */}
-          <div className="flex flex-wrap gap-2 ml-[4.5rem] mb-6">
+          <div className="flex flex-wrap gap-2 sm:ml-[4.5rem] mb-6">
             {project.tags.map(tag => (
               <span key={tag} className="px-3 py-1 text-[11px] font-semibold rounded-lg bg-devshare-bg border border-devshare-border/60 text-devshare-text_secondary hover:text-white transition-colors">
                 {tag}
@@ -58,7 +60,7 @@ export const ProjectList = ({ activeFilter }: Props) => {
           </div>
 
           {/* Footer */}
-          <div className="flex items-center justify-between ml-[4.5rem] pt-4 border-t border-devshare-border/30">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:ml-[4.5rem] pt-4 border-t border-devshare-border/30">
             {/* Contributors */}
             <div className="flex items-center gap-2">
               <div className="flex -space-x-2">

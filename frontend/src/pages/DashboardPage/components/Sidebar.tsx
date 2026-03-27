@@ -16,7 +16,7 @@ export const Sidebar = () => {
   const navigate = useNavigate();
 
   return (
-    <aside className="w-64 h-screen fixed left-0 top-0 border-r border-devshare-border bg-devshare-bg flex flex-col">
+    <aside className="hidden md:flex w-64 h-screen fixed left-0 top-0 border-r border-devshare-border bg-devshare-bg flex-col">
       {/* Logo */}
       <div className="px-6 py-5 border-b border-devshare-border/50">
         <Link to="/dashboard" className="flex items-center gap-3 group">

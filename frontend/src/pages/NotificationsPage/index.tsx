@@ -19,13 +19,16 @@ const NotificationIcon = ({ type }: { type: string }) => {
   }
 };
 
+import { MobileNav } from '../../components/MobileNav';
+
 export const NotificationsPage = () => {
   const [activeTab, setActiveTab] = useState('All');
 
   return (
     <div className="min-h-screen bg-devshare-bg text-devshare-text_primary font-inter">
       <Sidebar />
-      <div className="ml-64 flex justify-center">
+      <MobileNav />
+      <div className="md:ml-64 flex justify-center pb-16 md:pb-0">
         <main className="w-full max-w-4xl px-8 py-10 min-h-screen flex flex-col">
           {/* Header */}
           <div className="flex items-center justify-between mb-8">

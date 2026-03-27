@@ -8,25 +8,25 @@ export const SearchHeader = () => {
 
   return (
     <div className="mb-8 pt-6">
-      <div className="flex items-center gap-4 mb-6">
+      <div className="flex items-center gap-2 sm:gap-4 mb-6">
         <div className="relative flex-1 group">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-devshare-text_secondary group-focus-within:text-devshare-blue transition-colors" />
+          <Search className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 sm:w-5 h-4 sm:h-5 text-devshare-text_secondary group-focus-within:text-devshare-blue transition-colors" />
           <input 
             type="text" 
-            placeholder="Search snippets, devs, or tech stack..."
-            className="w-full bg-[#0d131a] border border-devshare-border/50 rounded-xl py-3 pl-12 pr-4 text-sm focus:outline-none focus:border-devshare-blue focus:shadow-[0_0_15px_rgba(37,157,244,0.1)] transition-all placeholder:text-devshare-text_secondary/50"
+            placeholder="Search..."
+            className="w-full bg-[#0d131a] border border-devshare-border/50 rounded-xl py-2.5 sm:py-3 pl-10 sm:pl-12 pr-4 text-xs sm:text-sm focus:outline-none focus:border-devshare-blue transition-all placeholder:text-devshare-text_secondary/50"
           />
         </div>
-        <button className="p-3 bg-[#0d131a] border border-devshare-border/50 hover:border-devshare-text_secondary text-devshare-text_secondary hover:text-white rounded-xl transition-colors">
-          <Filter className="w-5 h-5" />
+        <button className="p-2.5 sm:p-3 bg-[#0d131a] border border-devshare-border/50 hover:border-devshare-text_secondary text-devshare-text_secondary hover:text-white rounded-xl transition-colors">
+          <Filter className="w-4 sm:w-5 h-4 sm:h-5" />
         </button>
         <motion.button
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          className="flex items-center gap-2 bg-devshare-blue hover:bg-devshare-blue_hover text-white px-5 py-3 rounded-xl font-bold text-sm shadow-lg shadow-devshare-blue/20 transition-all flex-shrink-0"
+          className="flex items-center justify-center gap-2 bg-devshare-blue hover:bg-devshare-blue_hover text-white px-3 sm:px-5 py-2.5 sm:py-3 rounded-xl font-bold text-xs sm:text-sm shadow-lg shadow-devshare-blue/20 transition-all flex-shrink-0"
         >
-          <Plus className="w-5 h-5" />
-          Drop Code
+          <Plus className="w-4 sm:w-5 h-4 sm:h-5" />
+          <span className="hidden sm:inline">Drop Code</span>
         </motion.button>
       </div>
 

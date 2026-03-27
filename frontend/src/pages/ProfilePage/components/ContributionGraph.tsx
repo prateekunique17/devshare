@@ -42,7 +42,7 @@ export const ContributionGraph = () => {
         {/* Glow overlay */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-devshare-blue/5 blur-[100px] pointer-events-none" />
         
-        <div className="flex items-center justify-between mb-6 relative z-10">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 relative z-10">
           <div className="flex items-center gap-2">
             <BarChart3 className="w-5 h-5 text-devshare-blue" />
             <h3 className="font-bold text-white text-base">Contribution History</h3>
@@ -60,21 +60,23 @@ export const ContributionGraph = () => {
           </div>
         </div>
 
-        <div className="flex gap-1.5 relative z-10">
-          {graphData.map((week, weekIdx) => (
-            <div key={weekIdx} className="flex flex-col gap-1.5">
-              {week.map((tier, dayIdx) => (
-                <motion.div
-                  key={dayIdx}
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: (weekIdx * 0.02) + (dayIdx * 0.01) }}
-                  whileHover={{ scale: 1.2, zIndex: 10 }}
-                  className={`w-3.5 h-3.5 rounded-[2px] cursor-pointer hover:ring-2 hover:ring-white/20 transition-all ${getTierColor(tier)}`}
-                />
-              ))}
-            </div>
-          ))}
+        <div className="overflow-x-auto pb-4 scrollbar-hide -mx-6 px-6 sm:mx-0 sm:px-0 relative z-10">
+          <div className="flex gap-1.5 min-w-max">
+            {graphData.map((week, weekIdx) => (
+              <div key={weekIdx} className="flex flex-col gap-1.5">
+                {week.map((tier, dayIdx) => (
+                  <motion.div
+                    key={dayIdx}
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: (weekIdx * 0.02) + (dayIdx * 0.01) }}
+                    whileHover={{ scale: 1.2, zIndex: 10 }}
+                    className={`w-3.5 h-3.5 rounded-[2px] cursor-pointer hover:ring-2 hover:ring-white/20 transition-all ${getTierColor(tier)}`}
+                  />
+                ))}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

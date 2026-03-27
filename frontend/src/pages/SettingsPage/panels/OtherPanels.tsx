@@ -12,7 +12,7 @@ export const LanguagePanel = () => {
         <p className="text-sm text-devshare-text_secondary">Choose your preferred language for DevShare.</p>
       </div>
       <div className="bg-[#0f141b] border border-devshare-border/60 rounded-2xl p-6">
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {languages.map(lang => (
             <button key={lang} onClick={() => setSelected(lang)}
               className={`p-3 rounded-xl text-sm font-semibold text-left transition-all ${selected === lang ? 'bg-devshare-blue/10 border border-devshare-blue text-devshare-blue' : 'bg-devshare-bg border border-devshare-border/50 text-devshare-text_secondary hover:text-white hover:border-devshare-text_secondary/50'}`}>
@@ -58,7 +58,7 @@ export const BlockedPanel = () => (
               <p className="text-[11px] text-devshare-text_secondary">{acc.handle} · Blocked {acc.blockedAt}</p>
             </div>
           </div>
-          <button className="px-4 py-2 border border-devshare-border text-xs font-bold text-devshare-text_secondary hover:text-white hover:border-white rounded-xl transition-colors">Unblock</button>
+          <button className="px-3 md:px-4 py-2 border border-devshare-border text-xs font-bold text-devshare-text_secondary hover:text-white hover:border-white rounded-xl transition-colors flex-shrink-0">Unblock</button>
         </div>
       ))}
       {blockedAccounts.length === 0 && <EmptyState text="No blocked accounts." />}
@@ -83,7 +83,7 @@ export const MutedPanel = () => (
               <p className="text-[11px] text-devshare-text_secondary">{acc.handle} · Muted {acc.mutedAt}</p>
             </div>
           </div>
-          <button className="px-4 py-2 border border-devshare-border text-xs font-bold text-devshare-text_secondary hover:text-white hover:border-white rounded-xl transition-colors">Unmute</button>
+          <button className="px-3 md:px-4 py-2 border border-devshare-border text-xs font-bold text-devshare-text_secondary hover:text-white hover:border-white rounded-xl transition-colors flex-shrink-0">Unmute</button>
         </div>
       ))}
     </div>
@@ -182,8 +182,8 @@ export const ManageAccountPanel = () => (
         { name: 'Google', connected: true, handle: 'alex@gmail.com' },
         { name: 'Twitter / X', connected: false, handle: '' },
       ].map(acc => (
-        <div key={acc.name} className="flex items-center justify-between py-2">
-          <div>
+        <div key={acc.name} className="flex items-center justify-between py-2 gap-4">
+          <div className="min-w-0">
             <p className="text-sm font-semibold text-white">{acc.name}</p>
             {acc.handle && <p className="text-[11px] text-devshare-text_secondary">{acc.handle}</p>}
           </div>
@@ -205,9 +205,9 @@ export const ManageAccountPanel = () => (
         </div>
         <p className="text-[11px] text-devshare-text_secondary mt-2">7.4GB / 10GB</p>
       </div>
-      <div className="flex gap-3 pt-2">
-        <button className="px-4 py-2 border border-devshare-border text-xs font-bold text-devshare-text_secondary hover:text-white rounded-xl transition-colors">Download My Data</button>
-        <button className="px-4 py-2 border border-red-500/30 text-xs font-bold text-red-400 hover:bg-red-500 hover:text-white rounded-xl transition-all">Delete Account</button>
+      <div className="flex flex-col sm:flex-row gap-3 pt-2">
+        <button className="px-4 py-2 border border-devshare-border text-xs font-bold text-devshare-text_secondary hover:text-white rounded-xl transition-colors text-center">Download My Data</button>
+        <button className="px-4 py-2 border border-red-500/30 text-xs font-bold text-red-400 hover:bg-red-500 hover:text-white rounded-xl transition-all text-center">Delete Account</button>
       </div>
     </div>
   </div>
@@ -248,7 +248,7 @@ export const AppearancePanel = () => {
       </div>
       <div className="bg-[#0f141b] border border-devshare-border/60 rounded-2xl p-6">
         <h3 className="font-bold text-white text-sm mb-4">Theme</h3>
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {['dark', 'light', 'system'].map(t => (
             <button key={t} onClick={() => setTheme(t)}
               className={`p-4 rounded-xl border text-center font-bold text-sm capitalize transition-all ${theme === t ? 'border-devshare-blue bg-devshare-blue/10 text-devshare-blue' : 'border-devshare-border/50 text-devshare-text_secondary hover:text-white'}`}>
@@ -278,8 +278,8 @@ export const SessionsPanel = () => (
     </div>
     <div className="bg-[#0f141b] border border-devshare-border/60 rounded-2xl p-6 space-y-4">
       {activeSessions.map((session, i) => (
-        <div key={i} className="flex items-center justify-between py-2">
-          <div className="flex items-center gap-3">
+        <div key={i} className="flex items-center justify-between py-2 gap-4">
+          <div className="flex items-center gap-3 min-w-0">
             <div className="w-9 h-9 bg-devshare-bg border border-devshare-border rounded-lg flex items-center justify-center">
               {i === 1 ? <Smartphone className="w-4 h-4 text-devshare-text_secondary" /> : <Monitor className="w-4 h-4 text-devshare-text_secondary" />}
             </div>
@@ -306,8 +306,8 @@ export const SessionsPanel = () => (
 const ToggleRow = ({ label, desc, defaultOn }: { label: string; desc: string; defaultOn: boolean }) => {
   const [on, setOn] = useState(defaultOn);
   return (
-    <div className="flex items-center justify-between">
-      <div>
+    <div className="flex items-center justify-between gap-4">
+      <div className="min-w-0">
         <p className="text-sm font-semibold text-white">{label}</p>
         <p className="text-[11px] text-devshare-text_secondary">{desc}</p>
       </div>

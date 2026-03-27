@@ -5,12 +5,12 @@ import { motion } from 'framer-motion';
 export const TrendingStories = () => {
   return (
     <section className="mb-12">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-black flex items-center gap-2">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+        <h2 className="text-xl font-black flex items-center gap-2 whitespace-nowrap">
           <Zap className="w-5 h-5 text-orange-500 fill-orange-500" />
           Trending Tech Stories
         </h2>
-        <button className="text-sm font-bold text-devshare-blue hover:underline">
+        <button className="text-sm font-bold text-devshare-blue hover:underline px-1">
           View all
         </button>
       </div>
