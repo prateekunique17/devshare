@@ -2,19 +2,23 @@ import { motion } from 'framer-motion';
 import { MessageSquare, Heart, Share2, MoreHorizontal, ExternalLink, GitBranch } from 'lucide-react';
 import { useState } from 'react';
 
-interface PostProps {
-  post: {
-    user: { name: string; handle: string; avatar: string };
-    title: string;
-    content: string;
-    tags: string[];
-    code: string;
-    fileName: string;
-    likes: number;
-    comments: number;
-    shares: number;
-    timestamp: string;
+export interface Post {
+  id: string;
+  created_at: string;
+  content: string;
+  tags: string[];
+  code_snippet: string | null;
+  likes_count: number;
+  comments: number;
+  shares: number;
+  profiles: {
+    username: string;
+    avatar_url: string | null;
   };
+}
+
+export interface PostProps {
+  post: Post;
 }
 
 const TAG_COLORS: Record<string, string> = {
@@ -26,7 +30,7 @@ const TAG_COLORS: Record<string, string> = {
   Design: 'bg-amber-500/10 border-amber-500/30 text-amber-400',
 };
 
-export const FeedPostCard = ({ post }: any) => {
+export const FeedPostCard = ({ post }: PostProps) => {
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(post.likes_count || 0);
 
@@ -84,22 +88,24 @@ export const FeedPostCard = ({ post }: any) => {
       </div>
 
       {/* Code Block */}
-      <div className="mx-5 mb-4 bg-[#050b12] border border-devshare-border/60 rounded-xl overflow-hidden">
-        <div className="flex items-center justify-between px-4 py-2.5 border-b border-devshare-border/40 bg-[#0c1420]">
-          <div className="flex gap-1.5 items-center">
-            <div className="w-3 h-3 rounded-full bg-red-500/70" />
-            <div className="w-3 h-3 rounded-full bg-yellow-500/70" />
-            <div className="w-3 h-3 rounded-full bg-green-500/70" />
+      {post.code_snippet && (
+        <div className="mx-5 mb-4 bg-[#050b12] border border-devshare-border/60 rounded-xl overflow-hidden">
+          <div className="flex items-center justify-between px-4 py-2.5 border-b border-devshare-border/40 bg-[#0c1420]">
+            <div className="flex gap-1.5 items-center">
+              <div className="w-3 h-3 rounded-full bg-red-500/70" />
+              <div className="w-3 h-3 rounded-full bg-yellow-500/70" />
+              <div className="w-3 h-3 rounded-full bg-green-500/70" />
+            </div>
+            <div className="flex items-center gap-2">
+              <GitBranch className="w-3 h-3 text-devshare-text_secondary" />
+              <span className="text-[10px] font-mono text-devshare-text_secondary">snippet.js</span>
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            <GitBranch className="w-3 h-3 text-devshare-text_secondary" />
-            <span className="text-[10px] font-mono text-devshare-text_secondary">{post.fileName}</span>
-          </div>
+          <pre className="p-4 font-mono text-xs leading-relaxed overflow-x-auto text-emerald-300/90 scrollbar-thin">
+            <code>{post.code_snippet}</code>
+          </pre>
         </div>
-        <pre className="p-4 font-mono text-xs leading-relaxed overflow-x-auto text-emerald-300/90 scrollbar-thin">
-          <code>{post.code}</code>
-        </pre>
-      </div>
+      )}
 
       {/* Card Footer */}
       <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-3.5 border-t border-devshare-border/40 bg-devshare-panel/20">

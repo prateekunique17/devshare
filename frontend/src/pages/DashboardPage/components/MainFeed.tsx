@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { StatsRow } from './StatsRow';
 import { FeedPostCard } from './FeedPostCard';
+import type { Post } from './FeedPostCard';
 import { CreatePostBox } from './CreatePostBox';
 import { Plus, Flame, Code2 } from 'lucide-react';
 
@@ -98,7 +99,7 @@ export const MainFeed = () => {
           ) : (
             data.pages.map((page, pageIndex) => (
               <div key={pageIndex} className="space-y-5">
-                {page.posts?.map((post: any) => (
+                {page.posts?.map((post: Post) => (
                   <motion.div
                     key={post.id}
                     initial={{ opacity: 0, y: 15 }}
