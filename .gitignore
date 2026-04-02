@@ -38,3 +38,7 @@ pnpm-debug.log*
 # Misc
 .eslintcache
 *.local
+
+
+# Secrets
+SECRET.md
