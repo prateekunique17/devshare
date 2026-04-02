@@ -26,17 +26,18 @@ const TAG_COLORS: Record<string, string> = {
   Design: 'bg-amber-500/10 border-amber-500/30 text-amber-400',
 };
 
-export const FeedPostCard = ({ post }: PostProps) => {
+export const FeedPostCard = ({ post }: any) => {
   const [liked, setLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(post.likes);
+  const [likeCount, setLikeCount] = useState(post.likes_count || 0);
 
   const handleLike = () => {
     setLiked(!liked);
-    setLikeCount(c => liked ? c - 1 : c + 1);
+    setLikeCount((c: number) => liked ? c - 1 : c + 1);
   };
 
-  // Get initials for avatar
-  const initials = post.user.name.split(' ').map(n => n[0]).join('');
+  const username = post.profiles?.username || 'Unknown Developer';
+  const avatarUrl = post.profiles?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${username}`;
+  const initials = username.substring(0, 2).toUpperCase();
 
   return (
     <div className="glass-panel overflow-hidden group hover:border-devshare-border/80 transition-all duration-300 hover:shadow-lg hover:shadow-black/20">
@@ -45,17 +46,19 @@ export const FeedPostCard = ({ post }: PostProps) => {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             <div
-              className="w-10 h-10 rounded-full flex items-center justify-center font-black text-sm text-white flex-shrink-0 shadow-sm"
-              style={{ backgroundColor: post.user.avatar }}
+              className="w-10 h-10 rounded-full flex items-center justify-center font-black text-sm text-white flex-shrink-0 shadow-sm bg-devshare-panel"
+              style={{ backgroundImage: `url(${avatarUrl})`, backgroundSize: 'cover' }}
             >
-              {initials}
+              {!post.profiles?.avatar_url && initials}
             </div>
             <div>
-              <h4 className="font-bold text-sm text-white">{post.user.name}</h4>
+              <h4 className="font-bold text-sm text-white">{username}</h4>
               <div className="flex items-center gap-1.5">
-                <p className="text-xs text-devshare-text_secondary">{post.timestamp}</p>
+                <p className="text-xs text-devshare-text_secondary">
+                  {new Date(post.created_at).toLocaleDateString()}
+                </p>
                 <span className="text-devshare-border">·</span>
-                <p className="text-xs text-devshare-blue font-medium">{post.user.handle}</p>
+                <p className="text-xs text-devshare-blue font-medium">@{username}</p>
               </div>
             </div>
           </div>
@@ -65,10 +68,7 @@ export const FeedPostCard = ({ post }: PostProps) => {
         </div>
 
         {/* Post Body */}
-        <h3 className="text-base font-bold text-devshare-blue mb-2 hover:underline cursor-pointer leading-snug">
-          {post.title}
-        </h3>
-        <p className="text-sm text-devshare-text_primary/80 leading-relaxed mb-4">{post.content}</p>
+        <p className="text-sm text-devshare-text_primary/80 leading-relaxed mb-4 whitespace-pre-wrap">{post.content}</p>
 
         {/* Tags */}
         <div className="flex flex-wrap gap-2">

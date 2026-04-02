@@ -1,12 +1,32 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { StatsRow } from './StatsRow';
 import { FeedPostCard } from './FeedPostCard';
-import { mockPosts } from '../data';
+import { CreatePostBox } from './CreatePostBox';
 import { Plus, Flame, Code2 } from 'lucide-react';
 
 export const MainFeed = () => {
   const [activeTab, setActiveTab] = useState<'all' | 'code'>('all');
+
+  const fetchPosts = async ({ pageParam = 1 }) => {
+    const res = await fetch(`http://localhost:5000/api/posts?page=${pageParam}&limit=10`);
+    if (!res.ok) throw new Error('Network response was not ok');
+    return res.json();
+  };
+
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    status,
+  } = useInfiniteQuery({
+    queryKey: ['posts'],
+    queryFn: fetchPosts,
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => lastPage.currentPage < lastPage.totalPages ? lastPage.currentPage + 1 : undefined,
+  });
 
   return (
     <div className="p-4 sm:p-8 max-w-3xl mx-auto">
@@ -68,17 +88,37 @@ export const MainFeed = () => {
           </div>
         </div>
 
+        <CreatePostBox />
+
         <div className="space-y-5">
-          {mockPosts.map((post, i) => (
-            <motion.div
-              key={post.id}
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1 + 0.2 }}
+          {status === 'pending' ? (
+            <p className="text-white text-center py-8">Loading feed...</p>
+          ) : status === 'error' ? (
+            <p className="text-red-500 text-center py-8">Error loading feed. Make sure backend is running.</p>
+          ) : (
+            data.pages.map((page, pageIndex) => (
+              <div key={pageIndex} className="space-y-5">
+                {page.posts?.map((post: any) => (
+                  <motion.div
+                    key={post.id}
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                  >
+                    <FeedPostCard post={post} />
+                  </motion.div>
+                ))}
+              </div>
+            ))
+          )}
+          {hasNextPage && (
+            <button
+               onClick={() => fetchNextPage()}
+               disabled={isFetchingNextPage}
+               className="w-full text-center py-4 cursor-pointer font-bold text-devshare-blue hover:text-white transition-colors"
             >
-              <FeedPostCard post={post} />
-            </motion.div>
-          ))}
+               {isFetchingNextPage ? 'Loading more...' : 'Load More'}
+            </button>
+          )}
         </div>
       </div>
     </div>

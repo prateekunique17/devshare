@@ -1,12 +1,48 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Lock, User, Github, Eye, EyeOff, Check } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { supabase } from '../../../lib/supabase';
 
 export const SignupForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [subscribe, setSubscribe] = useState(true);
+  
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSignup = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!agreeTerms) {
+      setErrorMsg("You must agree to the Terms of Service.");
+      return;
+    }
+    
+    setLoading(true);
+    setErrorMsg('');
+
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          username: username,
+        }
+      }
+    });
+
+    if (error) {
+      setErrorMsg(error.message);
+      setLoading(false);
+    } else {
+      navigate('/dashboard');
+    }
+  };
 
   return (
     <motion.div
@@ -45,7 +81,7 @@ export const SignupForm = () => {
         <div className="h-px bg-devshare-border flex-1" />
       </div>
 
-      <form className="space-y-4">
+      <form onSubmit={handleSignup} className="space-y-4">
         <div className="space-y-1.5">
           <label className="text-sm font-semibold text-white block">Username</label>
           <div className="relative">
@@ -53,7 +89,10 @@ export const SignupForm = () => {
             <input 
               type="text" 
               placeholder="DevWizard99"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               className="w-full bg-[#0B1016] border border-devshare-border rounded-lg py-3 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-devshare-blue transition-colors placeholder:text-devshare-text_secondary/50 [&:-webkit-autofill]:[transition-delay:9999s] [&:-webkit-autofill]:[-webkit-text-fill-color:white] shadow-[0_0_0_1000px_#0B1016_inset]"
+              required
             />
           </div>
         </div>
@@ -65,7 +104,10 @@ export const SignupForm = () => {
             <input 
               type="email" 
               placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="w-full bg-[#0B1016] border border-devshare-border rounded-lg py-3 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-devshare-blue transition-colors placeholder:text-devshare-text_secondary/50 [&:-webkit-autofill]:[transition-delay:9999s] [&:-webkit-autofill]:[-webkit-text-fill-color:white] shadow-[0_0_0_1000px_#0B1016_inset]"
+              required
             />
           </div>
         </div>
@@ -77,7 +119,10 @@ export const SignupForm = () => {
             <input 
               type={showPassword ? "text" : "password"} 
               placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="w-full bg-[#0B1016] border border-devshare-border rounded-lg py-3 pl-10 pr-10 text-sm text-white focus:outline-none focus:border-devshare-blue transition-colors placeholder:text-devshare-text_secondary/50 [&:-webkit-autofill]:[transition-delay:9999s] shadow-[0_0_0_1000px_#0B1016_inset] [&:-webkit-autofill]:[-webkit-text-fill-color:white]"
+              required
             />
             <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-devshare-text_secondary hover:text-white transition-colors">
               {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
@@ -105,15 +150,17 @@ export const SignupForm = () => {
           </label>
         </div>
 
-        <Link to="/dashboard" className="block w-full">
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="w-full py-3.5 bg-devshare-blue hover:bg-devshare-blue_hover text-white rounded-lg font-bold text-[15px] transition-colors mt-6 shadow-[0_0_20px_rgba(37,157,244,0.3)]"
-          >
-            Create Account
-          </motion.button>
-        </Link>
+        {errorMsg && <p className="text-red-500 text-sm">{errorMsg}</p>}
+
+        <motion.button
+          type="submit"
+          disabled={loading}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          className="w-full py-3.5 bg-devshare-blue hover:bg-devshare-blue_hover disabled:opacity-50 text-white rounded-lg font-bold text-[15px] transition-colors mt-6 shadow-[0_0_20px_rgba(37,157,244,0.3)]"
+        >
+          {loading ? 'Creating Account...' : 'Create Account'}
+        </motion.button>
       </form>
     </motion.div>
   );

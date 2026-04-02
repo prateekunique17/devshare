@@ -1,11 +1,14 @@
 # Dependencies
 node_modules/
+**/node_modules/
 .pnp
 .pnp.js
 
 # Build output
 dist/
 build/
+**/dist/
+**/build/
 
 # Environment variables
 .env
@@ -13,6 +16,9 @@ build/
 .env.development.local
 .env.test.local
 .env.production.local
+**/.env
+**/.env.*
+!**/.env.example
 
 # IDE & Editor
 .vscode/
