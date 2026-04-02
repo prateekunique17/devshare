@@ -38,3 +38,37 @@ This document summarizes the major changes, features, and technical pivots imple
 - **Frontend:** Running on `localhost:5173` with real-time feed fetching.
 - **Backend:** Running on `localhost:5000` with Supabase connectivity.
 - **Database:** Ready for expansion into social interactions (Likes, Follows).
+- **Git Branch:** Currently working on the `backend` branch.
+
+## 💾 Git & GitHub Operations
+We performed the following actions to secure and version the code:
+
+1. **GitHub Status Check**
+   ```bash
+   git status
+   ```
+2. **Commit README Changes**
+   ```bash
+   git add README.md
+   git commit -m "changed README file"
+   git push origin main
+   ```
+3. **Upgrade Security (.gitignore)**
+   Updated the root `.gitignore` to ensure `node_modules` and `.env` files are ignored in all subdirectories.
+4. **Create & Switch to New Branch**
+   ```bash
+   git checkout -b backend
+   ```
+5. **Stage & Commit Full Project**
+   ```bash
+   git add .
+   git commit -m "Initialize backend and integrate with Supabase"
+   ```
+6. **Push to GitHub**
+   ```bash
+   git push origin backend
+   ```
+
+## 🌳 Branch Management Summary
+- **main:** The production-ready branch (currently updated with README).
+- **backend:** The active development branch containing the Node.js/Express pivot and Supabase integration.
