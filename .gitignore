@@ -45,5 +45,15 @@ pnpm-debug.log*
 .eslintcache
 *.local
 
-# Secrets
+# Secrets & Internal Documentation
 SECRET.md
+
+
+# some planning files
+chat.md
+branches.md
+ROADMAP*.md
+TECH_STACK.md
+CHECKLIST.md
+ROADMAP_FULL.md.resolved
+
