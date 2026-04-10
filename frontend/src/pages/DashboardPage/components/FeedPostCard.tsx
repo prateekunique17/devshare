@@ -1,6 +1,8 @@
-import { motion } from 'framer-motion';
-import { MessageSquare, Heart, Share2, MoreHorizontal, ExternalLink, GitBranch } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { MessageSquare, Heart, Share2, MoreHorizontal, ExternalLink, GitBranch, Send } from 'lucide-react';
 import { useState } from 'react';
+import { useAuth } from '../../../contexts/AuthContext';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export interface Post {
   id: string;
@@ -8,6 +10,7 @@ export interface Post {
   content: string;
   tags: string[];
   code_snippet: string | null;
+  repo_url?: string;
   likes_count: number;
   comments: number;
   shares: number;
@@ -33,10 +36,70 @@ const TAG_COLORS: Record<string, string> = {
 export const FeedPostCard = ({ post }: PostProps) => {
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(post.likes_count || 0);
+  const [showComments, setShowComments] = useState(false);
+  const [showCode, setShowCode] = useState(false);
+  const [newComment, setNewComment] = useState('');
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
+
+  // Fetch comments
+  const { data: comments = [], isLoading: isLoadingComments } = useQuery({
+    queryKey: ['comments', post.id],
+    queryFn: async () => {
+      const res = await fetch(`http://localhost:5000/api/posts/${post.id}/comments`);
+      if (!res.ok) throw new Error('Failed to fetch comments');
+      return res.json();
+    },
+    enabled: showComments,
+  });
+
+  // Like Mutation
+  const likeMutation = useMutation({
+    mutationFn: async () => {
+      const res = await fetch(`http://localhost:5000/api/posts/${post.id}/like`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: user?.id })
+      });
+      if (!res.ok) throw new Error('Failed to like post');
+      return res.json();
+    },
+    onSuccess: (data) => {
+      setLiked(data.liked);
+      setLikeCount(data.likes_count);
+    }
+  });
+
+  // Comment Mutation
+  const commentMutation = useMutation({
+    mutationFn: async () => {
+      const res = await fetch(`http://localhost:5000/api/posts/${post.id}/comments`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: user?.id, content: newComment })
+      });
+      if (!res.ok) throw new Error('Failed to post comment');
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['comments', post.id] });
+      setNewComment('');
+    }
+  });
 
   const handleLike = () => {
+    if (!user) return alert("Please login to like posts");
+    likeMutation.mutate();
+    // Optimistic UI update
     setLiked(!liked);
     setLikeCount((c: number) => liked ? c - 1 : c + 1);
+  };
+
+  const handleAddComment = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user) return alert("Please login to comment");
+    if (!newComment.trim()) return;
+    commentMutation.mutate();
   };
 
   const username = post.profiles?.username || 'Unknown Developer';
@@ -89,8 +152,11 @@ export const FeedPostCard = ({ post }: PostProps) => {
 
       {/* Code Block */}
       {post.code_snippet && (
-        <div className="mx-5 mb-4 bg-[#050b12] border border-devshare-border/60 rounded-xl overflow-hidden">
-          <div className="flex items-center justify-between px-4 py-2.5 border-b border-devshare-border/40 bg-[#0c1420]">
+        <div className="mx-5 mb-4 bg-[#050b12] border border-devshare-border/60 rounded-xl overflow-hidden transition-all duration-300">
+          <button 
+            onClick={() => setShowCode(!showCode)}
+            className="w-full flex items-center justify-between px-4 py-2.5 border-b border-devshare-border/40 bg-[#0c1420] hover:bg-[#111926] transition-colors cursor-pointer"
+          >
             <div className="flex gap-1.5 items-center">
               <div className="w-3 h-3 rounded-full bg-red-500/70" />
               <div className="w-3 h-3 rounded-full bg-yellow-500/70" />
@@ -98,12 +164,25 @@ export const FeedPostCard = ({ post }: PostProps) => {
             </div>
             <div className="flex items-center gap-2">
               <GitBranch className="w-3 h-3 text-devshare-text_secondary" />
-              <span className="text-[10px] font-mono text-devshare-text_secondary">snippet.js</span>
+              <span className="text-[10px] font-mono text-devshare-text_secondary">
+                snippet.js {showCode ? '(Click to collapse)' : '(Click to view code)'}
+              </span>
             </div>
-          </div>
-          <pre className="p-4 font-mono text-xs leading-relaxed overflow-x-auto text-emerald-300/90 scrollbar-thin">
-            <code>{post.code_snippet}</code>
-          </pre>
+          </button>
+          
+          <AnimatePresence>
+            {showCode && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+              >
+                <pre className="p-4 font-mono text-xs leading-relaxed overflow-x-auto text-emerald-300/90 scrollbar-thin max-h-[300px] overflow-y-auto">
+                  <code>{post.code_snippet}</code>
+                </pre>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       )}
 
@@ -122,24 +201,96 @@ export const FeedPostCard = ({ post }: PostProps) => {
             <Heart className={`w-3.5 h-3.5 ${liked ? 'fill-red-400' : ''}`} />
             {likeCount}
           </motion.button>
-          <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-devshare-text_secondary hover:bg-devshare-panel_hover hover:text-devshare-blue transition-all">
+          <button 
+            onClick={() => setShowComments(!showComments)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-devshare-text_secondary hover:bg-devshare-panel_hover hover:text-devshare-blue transition-all"
+          >
             <MessageSquare className="w-3.5 h-3.5" />
-            {post.comments}
+            {comments.length > 0 ? comments.length : post.comments || 0}
           </button>
           <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-devshare-text_secondary hover:bg-devshare-panel_hover hover:text-green-400 transition-all">
             <Share2 className="w-3.5 h-3.5" />
             {post.shares}
           </button>
         </div>
-        <motion.button
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.97 }}
-          className="flex items-center gap-1.5 px-4 py-1.5 bg-devshare-blue/10 border border-devshare-blue/30 hover:bg-devshare-blue hover:border-devshare-blue text-devshare-blue hover:text-white rounded-lg text-[11px] font-black uppercase tracking-wider transition-all"
-        >
-          <ExternalLink className="w-3 h-3" />
-          View Repo
-        </motion.button>
+        {post.repo_url && (
+          <motion.a
+            href={post.repo_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            className="flex items-center gap-1.5 px-4 py-1.5 bg-devshare-blue/10 border border-devshare-blue/30 hover:bg-devshare-blue hover:border-devshare-blue text-devshare-blue hover:text-white rounded-lg text-[11px] font-black uppercase tracking-wider transition-all"
+          >
+            <ExternalLink className="w-3 h-3" />
+            View Repo
+          </motion.a>
+        )}
       </div>
+
+      {/* Comments Section */}
+      <AnimatePresence>
+        {showComments && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="border-t border-devshare-border/40 bg-devshare-panel/30 overflow-hidden"
+          >
+            <div className="p-5 flex flex-col gap-4">
+              
+              {/* Existing Comments list */}
+              <div className="space-y-4 max-h-[200px] overflow-y-auto scrollbar-thin rounded-lg">
+                {isLoadingComments ? (
+                  <p className="text-xs text-devshare-text_secondary text-center">Loading comments...</p>
+                ) : comments.length === 0 ? (
+                  <p className="text-xs text-devshare-text_secondary text-center">No comments yet. Be the first!</p>
+                ) : (
+                  comments.map((comment: any) => (
+                    <div key={comment.id} className="flex gap-3">
+                      <div
+                        className="w-7 h-7 rounded-full bg-devshare-panel flex-shrink-0"
+                        style={{
+                          backgroundImage: `url(${comment.profiles?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${comment.profiles?.username}`})`,
+                          backgroundSize: 'cover'
+                        }}
+                      />
+                      <div className="bg-black/20 p-3 rounded-xl rounded-tl-none border border-devshare-border/30 text-sm w-full">
+                        <div className="flex justify-between items-baseline mb-1">
+                          <span className="font-bold text-white text-xs">{comment.profiles?.username}</span>
+                          <span className="text-[10px] text-devshare-text_secondary">
+                            {new Date(comment.created_at).toLocaleDateString()}
+                          </span>
+                        </div>
+                        <p className="text-devshare-text_primary/90 text-xs">{comment.content}</p>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+
+              {/* Add Comment Input */}
+              <form onSubmit={handleAddComment} className="flex gap-2 items-end mt-2">
+                <textarea
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
+                  placeholder="Write a comment..."
+                  className="w-full bg-[#050b12] border border-devshare-border/60 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-devshare-blue transition-colors resize-none"
+                  rows={2}
+                />
+                <button
+                  type="submit"
+                  disabled={!newComment.trim() || commentMutation.isPending}
+                  className="bg-devshare-blue hover:bg-devshare-blue_hover disabled:opacity-50 text-white p-2 rounded-xl transition-colors flex-shrink-0"
+                >
+                  <Send className="w-4 h-4" />
+                </button>
+              </form>
+
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

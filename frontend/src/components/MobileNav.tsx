@@ -2,6 +2,7 @@ import { Home, Compass, FolderKanban, Bell, User, Menu, X, MessageSquare, Settin
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useAuth } from '../contexts/AuthContext';
 
 const tabs = [
   { icon: Home, label: 'Home', path: '/dashboard' },
@@ -15,6 +16,7 @@ export const MobileNav = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const { profile } = useAuth();
 
   return (
     <>
@@ -83,13 +85,13 @@ export const MobileNav = () => {
               <div className="px-4 py-4 border-t border-devshare-border/40">
                 <div className="flex items-center gap-3 p-3 mb-3">
                   <div className="relative">
-                    <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Alex&backgroundColor=b6e3f4" alt="Alex"
-                      className="w-10 h-10 rounded-full bg-[#fde1c3]" />
+                    <img src={profile?.avatar_url || "https://api.dicebear.com/7.x/avataaars/svg?seed=fallback"} alt={profile?.username || "User"}
+                      className="w-10 h-10 rounded-full bg-[#0b1016] object-cover" />
                     <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-[#0b1016] rounded-full" />
                   </div>
-                  <div>
-                    <p className="text-sm font-bold text-white">Alex Rivera</p>
-                    <p className="text-xs text-devshare-text_secondary">Fullstack Dev</p>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-bold text-white truncate">{profile?.username || 'Guest User'}</p>
+                    <p className="text-xs text-devshare-text_secondary truncate">{profile?.bio ? profile.bio.substring(0, 20) + (profile.bio.length > 20 ? '...' : '') : 'DevShare Member'}</p>
                   </div>
                 </div>
                 <button

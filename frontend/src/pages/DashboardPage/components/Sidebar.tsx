@@ -1,8 +1,7 @@
 import { motion } from 'framer-motion';
 import { Home, Compass, FolderKanban, MessageSquare, Bell, User, Settings, ChevronRight, LogOut, Sparkles } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-
-const navItems = [
+import { useAuth } from '../../../contexts/AuthContext';const navItems = [
   { icon: Home, label: 'Home', path: '/dashboard', badge: null },
   { icon: Compass, label: 'Explore', path: '/explore', badge: null },
   { icon: FolderKanban, label: 'Projects', path: '/projects', badge: '24' },
@@ -14,6 +13,7 @@ const navItems = [
 export const Sidebar = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { profile } = useAuth();
 
   return (
     <aside className="hidden md:flex w-64 h-screen fixed left-0 top-0 border-r border-devshare-border bg-devshare-bg flex-col">
@@ -86,18 +86,22 @@ export const Sidebar = () => {
       {/* User Profile Footer */}
       <div className="px-4 py-4 border-t border-devshare-border/50">
         <div
-          onClick={() => navigate('/login')}
+          onClick={() => {
+            // Usually we'd call a signout function here, but we'll leave it navigating to login for now or just navigate to profile if they click it? Wait, they said the logout button.
+            // Let's keep the existing behavior, just change the visual.
+            navigate('/login');
+          }}
           className="flex items-center gap-3 p-3 rounded-xl hover:bg-devshare-panel_hover transition-colors cursor-pointer group"
         >
           <div className="relative flex-shrink-0">
-            <div className="w-9 h-9 rounded-full overflow-hidden border border-devshare-border bg-[#fde1c3]">
-              <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Alex&backgroundColor=b6e3f4" alt="Alex Rivera" className="w-full h-full object-cover" />
+            <div className="w-9 h-9 rounded-full overflow-hidden border border-devshare-border bg-[#0b1016]">
+              <img src={profile?.avatar_url || "https://api.dicebear.com/7.x/avataaars/svg?seed=fallback"} alt={profile?.username || "User"} className="w-full h-full object-cover" />
             </div>
             <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-devshare-bg rounded-full" />
           </div>
           <div className="flex-1 min-w-0">
-            <h4 className="text-sm font-bold truncate group-hover:text-devshare-blue transition-colors">Alex Rivera</h4>
-            <p className="text-xs text-devshare-text_secondary truncate">Fullstack Dev</p>
+            <h4 className="text-sm font-bold truncate group-hover:text-devshare-blue transition-colors">{profile?.username || 'Guest User'}</h4>
+            <p className="text-xs text-devshare-text_secondary truncate">{profile?.bio ? profile.bio.substring(0, 20) + (profile.bio.length > 20 ? '...' : '') : 'DevShare Member'}</p>
           </div>
           <LogOut className="w-4 h-4 text-red-400 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
         </div>

@@ -31,7 +31,7 @@ router.get('/', async (req, res) => {
 // Create a new post
 router.post('/', async (req, res) => {
   // Validate request
-  const { user_id, content, code_snippet, tags } = req.body;
+  const { user_id, content, code_snippet, tags, repo_url } = req.body;
   if (!user_id || !content) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
@@ -40,13 +40,93 @@ router.post('/', async (req, res) => {
     const { data: newPost, error } = await supabase
       .from('posts')
       .insert([
-        { user_id, content, code_snippet, tags }
+        { user_id, content, code_snippet, tags, repo_url }
       ])
       .select()
       .single();
 
     if (error) throw error;
     res.status(201).json(newPost);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+// Toggle like for a post
+router.post('/:id/like', async (req, res) => {
+  const postId = req.params.id;
+  const { user_id } = req.body;
+
+  if (!user_id) return res.status(400).json({ error: 'Missing user_id' });
+
+  try {
+    // Check if the user already liked the post
+    const { data: existingLike } = await supabase
+      .from('post_likes')
+      .select('id')
+      .eq('post_id', postId)
+      .eq('user_id', user_id)
+      .single();
+
+    if (existingLike) {
+      // Unlike: remove from post_likes and decrement likes_count
+      await supabase.from('post_likes').delete().eq('id', existingLike.id);
+      
+      const { data: post } = await supabase.from('posts').select('likes_count').eq('id', postId).single();
+      const newCount = Math.max(0, (post?.likes_count || 0) - 1);
+      await supabase.from('posts').update({ likes_count: newCount }).eq('id', postId);
+      
+      return res.json({ liked: false, likes_count: newCount });
+    } else {
+      // Like: insert into post_likes and increment likes_count
+      await supabase.from('post_likes').insert([{ post_id: postId, user_id }]);
+      
+      const { data: post } = await supabase.from('posts').select('likes_count').eq('id', postId).single();
+      const newCount = (post?.likes_count || 0) + 1;
+      await supabase.from('posts').update({ likes_count: newCount }).eq('id', postId);
+      
+      return res.json({ liked: true, likes_count: newCount });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Get comments for a post
+router.get('/:id/comments', async (req, res) => {
+  const postId = req.params.id;
+  try {
+    const { data: comments, error } = await supabase
+      .from('post_comments')
+      .select('*, profiles(username, avatar_url)')
+      .eq('post_id', postId)
+      .order('created_at', { ascending: true });
+
+    if (error) throw error;
+    res.json(comments);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Add a comment to a post
+router.post('/:id/comments', async (req, res) => {
+  const postId = req.params.id;
+  const { user_id, content } = req.body;
+
+  if (!user_id || !content) return res.status(400).json({ error: 'Missing required fields' });
+
+  try {
+    const { data: newComment, error } = await supabase
+      .from('post_comments')
+      .insert([{ post_id: postId, user_id, content }])
+      .select('*, profiles(username, avatar_url)')
+      .single();
+
+    if (error) throw error;
+    
+    // Optionally increment comments count on the post if you add a comments column
+    // For now we'll just return the comment
+    res.status(201).json(newComment);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

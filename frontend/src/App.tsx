@@ -9,14 +9,23 @@ import { NotificationsPage } from './pages/NotificationsPage';
 import { MessagesPage } from './pages/MessagesPage';
 import { ProjectsPage } from './pages/ProjectsPage';
 import { SettingsPage } from './pages/SettingsPage';
+import { OnboardingPage } from './pages/OnboardingPage';
+import { EditProfilePage } from './pages/EditProfilePage';
 
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { Navigate } from 'react-router-dom';
 
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user, loading } = useAuth();
-  if (loading) return <div className="h-screen w-screen flex items-center justify-center bg-devshare-bg text-white">Loading...</div>;
+const ProtectedRoute = ({ children, requireOnboarding = true }: { children: React.ReactNode, requireOnboarding?: boolean }) => {
+  const { user, profile, loading } = useAuth();
+  
+  if (loading) return <div className="h-screen w-screen flex items-center justify-center bg-[#02060d] text-white">Loading...</div>;
   if (!user) return <Navigate to="/login" replace />;
+  
+  // Force user to onboarding if they haven't completed it
+  if (requireOnboarding && profile && profile.onboarded === false) {
+    return <Navigate to="/onboarding" replace />;
+  }
+
   return <>{children}</>;
 };
 
@@ -30,9 +39,12 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           
           {/* Protected Routes */}
+          <Route path="/onboarding" element={<ProtectedRoute requireOnboarding={false}><OnboardingPage /></ProtectedRoute>} />
+          
           <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
           <Route path="/explore" element={<ProtectedRoute><ExplorePage /></ProtectedRoute>} />
           <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+          <Route path="/edit-profile" element={<ProtectedRoute><EditProfilePage /></ProtectedRoute>} />
           <Route path="/notifications" element={<ProtectedRoute><NotificationsPage /></ProtectedRoute>} />
           <Route path="/messages" element={<ProtectedRoute><MessagesPage /></ProtectedRoute>} />
           <Route path="/projects" element={<ProtectedRoute><ProjectsPage /></ProtectedRoute>} />

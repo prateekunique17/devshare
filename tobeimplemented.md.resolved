@@ -1,0 +1,60 @@
+# Implementation Plan - New Project Posting Flow
+
+The goal is to implement a robust project sharing system where users can post their projects via a dedicated page. Projects will be displayed dynamically in the Explore section, and the redundant standalone "Projects" navigation item will be removed.
+
+## User Review Required
+
+> [!IMPORTANT]
+> **Database Schema:** I will be creating a new `projects` table in Supabase. Please ensure your Supabase instance is accessible and the `.env` variables are correctly set.
+> **Navigation Change:** The "Projects" tab will be removed from the sidebar. All project exploration will now happen in the "Explore" tab.
+
+## Proposed Changes
+
+### Backend
+
+#### [NEW] [projects.js](file:///c:/Users/HP/OneDrive/Desktop/stitch/backend/routes/projects.js)
+- Implement `POST /api/projects`: Creates a new project in Supabase.
+- Implement `GET /api/projects`: Fetches all projects with user profile info for the Explore page.
+
+#### [MODIFY] [index.js](file:///c:/Users/HP/OneDrive/Desktop/stitch/backend/index.js)
+- Mount the new `projects` route at `/api/projects`.
+
+### Frontend
+
+#### [NEW] [CreateProjectPage](file:///c:/Users/HP/OneDrive/Desktop/stitch/frontend/src/pages/CreateProjectPage/index.tsx)
+- Create a premium UI form for project submission.
+- Fields: Title, Description, Image URL, Tags (multi-select/custom), and GitHub URL.
+- Integrate with React Query for form submission.
+
+#### [MODIFY] [App.tsx](file:///c:/Users/HP/OneDrive/Desktop/stitch/frontend/src/App.tsx)
+- Add route for `/create-project`.
+- Remove route for `/projects`.
+
+#### [MODIFY] [Sidebar.tsx](file:///c:/Users/HP/OneDrive/Desktop/stitch/frontend/src/pages/DashboardPage/components/Sidebar.tsx)
+- Update "New Project" button to navigate to `/create-project`.
+- Remove "Projects" link from the navigation items.
+
+#### [MODIFY] [MobileNav.tsx](file:///c:/Users/HP/OneDrive/Desktop/stitch/frontend/src/components/MobileNav.tsx)
+- Remove "Projects" link from the bottom tab bar/drawer.
+
+#### [MODIFY] [MainFeed.tsx](file:///c:/Users/HP/OneDrive/Desktop/stitch/frontend/src/pages/DashboardPage/components/MainFeed.tsx)
+- Update "New Project" button header to navigate to `/create-project`.
+
+#### [MODIFY] [ExplorePage](file:///c:/Users/HP/OneDrive/Desktop/stitch/frontend/src/pages/ExplorePage/index.tsx)
+- Fetch real projects from the backend via React Query.
+- Update components to handle the real data structure.
+
+## Open Questions
+
+- **Image Uploads:** Do you want to support physical image uploads to Supabase Storage, or just pasting an image URL for now? (I'll start with URLs as it's faster, but can add storage later).
+- **Project Structure:** Should projects also have "Likes" and "Comments" separate from the existing Post system? (I recommend a unified interaction system).
+
+## Verification Plan
+
+### Automated Tests
+- Verify project creation via Network tab logs.
+- Verify Explore page lists the new project.
+
+### Manual Verification
+- Navigate to "New Project" -> Fill form -> Submit -> Check Explore.
+- Verify "Projects" link is removed from Sidebar.
