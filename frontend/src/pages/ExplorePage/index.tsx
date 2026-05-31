@@ -1,12 +1,18 @@
+import { useState } from 'react';
 import { Sidebar } from '../DashboardPage/components/Sidebar';
 import { SearchHeader } from './components/SearchHeader';
 import { TrendingStories } from './components/TrendingStories';
 import { CommunityGems } from './components/CommunityGems';
+import { DropGemModal } from './components/DropGemModal';
 import { RightPanel } from '../DashboardPage/components/RightPanel';
 import { motion } from 'framer-motion';
 import { MobileNav } from '../../components/MobileNav';
 
 export const ExplorePage = () => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeCategory, setActiveCategory] = useState('All Gems');
+  const [isDropModalOpen, setIsDropModalOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-devshare-bg text-devshare-text_primary font-inter">
       <Sidebar />
@@ -18,9 +24,18 @@ export const ExplorePage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <SearchHeader />
+            <SearchHeader 
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              activeCategory={activeCategory}
+              setActiveCategory={setActiveCategory}
+              onDropClick={() => setIsDropModalOpen(true)}
+            />
             <TrendingStories />
-            <CommunityGems />
+            <CommunityGems 
+              searchQuery={searchQuery}
+              activeCategory={activeCategory}
+            />
           </motion.div>
         </main>
         
@@ -29,6 +44,12 @@ export const ExplorePage = () => {
             <RightPanel />
           </div>
         </aside>
+
+        {/* Drop Code Modal */}
+        <DropGemModal 
+          isOpen={isDropModalOpen}
+          onClose={() => setIsDropModalOpen(false)}
+        />
       </div>
     </div>
   );

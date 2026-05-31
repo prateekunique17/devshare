@@ -4,12 +4,14 @@ import { ProjectList } from './components/ProjectList';
 import { ProjectsRightPanel } from './components/ProjectsRightPanel';
 import { Search, Plus } from 'lucide-react';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { MobileNav } from '../../components/MobileNav';
 
 const tabs = ['All Projects', 'In Progress', 'Completed'];
 
 export const ProjectsPage = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('All Projects');
 
   return (
@@ -96,6 +98,7 @@ export const ProjectsPage = () => {
       <motion.button
         whileHover={{ scale: 1.04 }}
         whileTap={{ scale: 0.97 }}
+        onClick={() => navigate('/create-project')}
         className="fixed bottom-20 right-6 md:bottom-8 md:right-auto md:left-[17rem] md:translate-x-0 flex items-center gap-2 bg-devshare-blue hover:bg-devshare-blue_hover text-white px-5 md:px-7 py-3 md:py-3.5 rounded-full md:rounded-2xl font-bold shadow-2xl shadow-devshare-blue/30 transition-all z-50"
       >
         <Plus className="w-5 h-5 md:w-5 md:h-5 text-white" />

@@ -3,18 +3,46 @@ import { supabase } from '../index.js';
 
 const router = express.Router();
 
-// Get paginated posts for the feed
+// Get paginated posts for the feed with search, sorting, and filtering
 router.get('/', async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
   const offset = (page - 1) * limit;
 
+  const type = req.query.type; // 'post' or 'gem'
+  const sortBy = req.query.sortBy || 'latest'; // 'latest' or 'popular'
+  const search = req.query.search || '';
+  const tag = req.query.tag; // category or specific tag
+
   try {
-    const { data: posts, error, count } = await supabase
+    let query = supabase
       .from('posts')
-      .select('*, profiles(username, avatar_url)', { count: 'exact' })
-      .order('created_at', { ascending: false })
-      .range(offset, offset + limit - 1);
+      .select('*, profiles(username, avatar_url)', { count: 'exact' });
+
+    // Filter by type if provided (post vs gem)
+    if (type) {
+      query = query.eq('type', type);
+    }
+
+    // Filter by tag if provided
+    if (tag) {
+      query = query.contains('tags', [tag]);
+    }
+
+    // Handle text search (searches title, content, and code snippet)
+    if (search) {
+      query = query.or(`content.ilike.%${search}%,title.ilike.%${search}%,code_snippet.ilike.%${search}%`);
+    }
+
+    // Handle sorting
+    if (sortBy === 'popular') {
+      query = query.order('likes_count', { ascending: false }).order('created_at', { ascending: false });
+    } else {
+      query = query.order('created_at', { ascending: false });
+    }
+
+    // Apply pagination range
+    const { data: posts, error, count } = await query.range(offset, offset + limit - 1);
 
     if (error) throw error;
 
@@ -28,10 +56,10 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Create a new post
+// Create a new post / gem
 router.post('/', async (req, res) => {
   // Validate request
-  const { user_id, content, code_snippet, tags, repo_url } = req.body;
+  const { user_id, content, code_snippet, tags, repo_url, type, title, image_gradient } = req.body;
   if (!user_id || !content) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
@@ -40,9 +68,18 @@ router.post('/', async (req, res) => {
     const { data: newPost, error } = await supabase
       .from('posts')
       .insert([
-        { user_id, content, code_snippet, tags, repo_url }
+        { 
+          user_id, 
+          content, 
+          code_snippet: code_snippet || null, 
+          tags: tags || [], 
+          repo_url: repo_url || null,
+          type: type || 'post',
+          title: title || null,
+          image_gradient: image_gradient || null
+        }
       ])
-      .select()
+      .select('*, profiles(username, avatar_url)')
       .single();
 
     if (error) throw error;

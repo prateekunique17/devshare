@@ -35,12 +35,14 @@ export const Sidebar = () => {
         <motion.button
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
+          onClick={() => navigate('/create-project')}
           className="w-full flex items-center justify-center gap-2 py-2.5 bg-devshare-blue/10 hover:bg-devshare-blue/20 border border-devshare-blue/30 text-devshare-blue rounded-xl text-sm font-bold transition-all"
         >
           <Sparkles className="w-4 h-4" />
           New Project
         </motion.button>
       </div>
+
 
       {/* Navigation */}
       <nav className="flex-1 px-4 py-2 space-y-1 overflow-y-auto">

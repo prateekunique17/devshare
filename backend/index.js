@@ -23,7 +23,10 @@ app.get('/health', (req, res) => {
 
 // Mount Routes
 import postRoutes from './routes/posts.js';
+import projectRoutes from './routes/projects.js';
 app.use('/api/posts', postRoutes);
+app.use('/api/projects', projectRoutes);
+
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);

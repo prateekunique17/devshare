@@ -72,3 +72,64 @@ We performed the following actions to secure and version the code:
 ## 🌳 Branch Management Summary
 - **main:** The production-ready branch (currently updated with README).
 - **backend:** The active development branch containing the Node.js/Express pivot and Supabase integration.
+
+## 🚀 Phase 2: Project Hub & Exploration Integration
+
+### 📁 Step 1: Database Table Setup for Projects
+- **Action:** Initiated Phase 2 by drafting and sharing the SQL script for creating the `projects` table in Supabase.
+- **Goal:** Set up table structure (`id`, `user_id` referencing `profiles(id)`, `title`, `description`, `image_url`, `tags`, `repo_url`, `status`, `created_at`) with Row-Level Security (RLS) policies.
+- **Log Created:** Initialized `log.md` to track each step of the development process going forward.
+- **SQL File Created:** Created `sql.md` to keep a permanent history of all SQL scripts and queries executed.
+- **Historical Cataloging:** Added all historical project queries (Queries 1 through 4) to `sql.md` for a complete database chronicle.
+- **Step 1 Completed:** User successfully executed the `projects` table creation script in Supabase, enabling projects schema.
+
+### 📁 Step 2: Implement Backend Projects Router & API Endpoints
+- **Action:** Created Express router for projects (`backend/routes/projects.js`) and mounted it in the main Express app entrypoint (`backend/index.js`).
+- **Endpoints Built:** 
+  - `GET /api/projects`: Fetches all projects ordered by creation time, dynamically joining matching profiles.
+  - `POST /api/projects`: Validates and inserts a new project, returning the created project combined with author details.
+
+### 📁 Step 3: Create Frontend Submission Form & Wire Navigation
+- **Action:** Developed the frontend project submission page (`CreateProjectPage`), registered it with the React Router, and connected all corresponding navigation actions.
+- **Modifications Made:**
+  - Created [CreateProjectPage](file:///c:/Users/HP/OneDrive/Desktop/stitch/frontend/src/pages/CreateProjectPage/index.tsx) with validation, technology tags list, and a React Query mutation.
+  - Connected `/create-project` route in [App.tsx](file:///c:/Users/HP/OneDrive/Desktop/stitch/frontend/src/App.tsx).
+  - Wired Sidebar, MainFeed, and ProjectsPage buttons to route to the form on click.
+  - Synchronized and updated [CHECKLIST.md](file:///c:/Users/HP/OneDrive/Desktop/stitch/CHECKLIST.md) progress indicators for Phase 2.
+### 📁 Step 4: Connect Projects Page to Real Database (Live Project Listing)
+- **Action:** Replaced mock project list with React Query-backed fetching from the real database, implemented loading states, a premium empty state CTA, and deterministic premium visual fallbacks.
+- **Modifications Made:**
+  - Integrated `useQuery` from `@tanstack/react-query` inside [ProjectList.tsx](file:///c:/Users/HP/OneDrive/Desktop/stitch/frontend/src/pages/ProjectsPage/components/ProjectList.tsx) querying `/api/projects`.
+  - Created a deterministic logo rendering function based on project title length, generating custom gradients and emojis for projects lacking screenshot URLs.
+  - Linked creator profile metadata and repository URLs dynamically.
+  - Updated all redirects on cancel, close, and success inside [CreateProjectPage](file:///c:/Users/HP/OneDrive/Desktop/stitch/frontend/src/pages/CreateProjectPage/index.tsx) to target the Project Hub (`/projects`).
+  - Synchronized and verified progress in [CHECKLIST.md](file:///c:/Users/HP/OneDrive/Desktop/stitch/CHECKLIST.md) and [log.md](file:///c:/Users/HP/OneDrive/Desktop/stitch/log.md).
+
+### 📁 Action: Establish Logging Standards
+- **Action:** Created a new standards reference sheet (`whattolog.md`) detailing the exact logging practices across `log.md`, `sql.md`, `chat.md`, and `CHECKLIST.md`.
+- **Modifications Made:**
+  - Created [whattolog.md](file:///c:/Users/HP/OneDrive/Desktop/stitch/whattolog.md) detailing logging standards, file scopes, when to update, and formatting rules.
+  - Linked files correctly inside all modified reference documents.
+
+### 📁 Phase 3: The Explore Page & Discovery Engine Integration
+- **Action:** Implemented the full Explore Page Discovery Engine, allowing users to query standard posts and visual/code showcase gems in real time.
+- **Modifications Made:**
+  - Expanded backend posts router [posts.js](file:///c:/Users/HP/OneDrive/Desktop/stitch/backend/routes/posts.js) to support type categorizations (post vs gem), text search keywords (`search`), trending highlights (`sortBy=popular`), and tag categorizations (`tag`).
+  - Added support for text querying and status filtering inside [projects.js](file:///c:/Users/HP/OneDrive/Desktop/stitch/backend/routes/projects.js).
+  - Created a code-dropping modal overlay [DropGemModal.tsx](file:///c:/Users/HP/OneDrive/Desktop/stitch/frontend/src/pages/ExplorePage/components/DropGemModal.tsx) to submit code snippets or design gradient visual cards.
+  - Linked parent states dynamically inside [ExplorePage](file:///c:/Users/HP/OneDrive/Desktop/stitch/frontend/src/pages/ExplorePage/index.tsx), [SearchHeader.tsx](file:///c:/Users/HP/OneDrive/Desktop/stitch/frontend/src/pages/ExplorePage/components/SearchHeader.tsx), [CommunityGems.tsx](file:///c:/Users/HP/OneDrive/Desktop/stitch/frontend/src/pages/ExplorePage/components/CommunityGems.tsx), and [TrendingStories.tsx](file:///c:/Users/HP/OneDrive/Desktop/stitch/frontend/src/pages/ExplorePage/components/TrendingStories.tsx) to load live data, filter by categories, perform text search, and list trending articles.
+  - Appended database changes to [sql.md](file:///c:/Users/HP/OneDrive/Desktop/stitch/sql.md) and synchronized status indicators in [log.md](file:///c:/Users/HP/OneDrive/Desktop/stitch/log.md) and [CHECKLIST.md](file:///c:/Users/HP/OneDrive/Desktop/stitch/CHECKLIST.md).
+
+### 📁 Action: Resolve Remaining TypeScript Build Errors
+- **Action:** Fixed unused imports and state variables causing frontend compilation failures on build/type-checking.
+- **Modifications Made:**
+  - Removed the unused `Link` icon import from `lucide-react` in [DropGemModal.tsx](file:///c:/Users/HP/OneDrive/Desktop/stitch/frontend/src/pages/ExplorePage/components/DropGemModal.tsx).
+  - Removed the unused `imageUrl` state hook and state-reset from [DropGemModal.tsx](file:///c:/Users/HP/OneDrive/Desktop/stitch/frontend/src/pages/ExplorePage/components/DropGemModal.tsx).
+  - Imported the missing `Loader2` component from `lucide-react` in [CommunityGems.tsx](file:///c:/Users/HP/OneDrive/Desktop/stitch/frontend/src/pages/ExplorePage/components/CommunityGems.tsx) to resolve runtime `ReferenceError` during loading states.
+  - Verified clean compilation with `npx tsc --noEmit` on the frontend codebase.
+
+### 📁 Action: Incorporate Content Deletion into the Roadmap Plan
+- **Action:** Added deletion controls for user-created Gems, Posts, and Projects to the active project checklist and master roadmap.
+- **Modifications Made:**
+  - Registered `Subphase 3.4: Content Deletion Controls` in [CHECKLIST.md](file:///c:/Users/HP/OneDrive/Desktop/stitch/CHECKLIST.md).
+  - Documented future tasks for delete buttons and DELETE endpoint requirements under `Subphase 3.4` in [ROADMAP_FULL.md.resolved](file:///c:/Users/HP/OneDrive/Desktop/stitch/ROADMAP_FULL.md.resolved).

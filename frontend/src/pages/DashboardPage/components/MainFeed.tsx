@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { StatsRow } from './StatsRow';
@@ -8,6 +9,7 @@ import { CreatePostBox } from './CreatePostBox';
 import { Plus, Flame, Code2 } from 'lucide-react';
 
 export const MainFeed = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'all' | 'code'>('all');
 
   const fetchPosts = async ({ pageParam = 1 }) => {
@@ -49,6 +51,7 @@ export const MainFeed = () => {
         <motion.button
           whileHover={{ scale: 1.04 }}
           whileTap={{ scale: 0.96 }}
+          onClick={() => navigate('/create-project')}
           className="hidden sm:flex bg-gradient-to-r from-devshare-blue to-blue-600 hover:from-devshare-blue_hover hover:to-blue-700 text-white px-5 py-2.5 rounded-xl font-bold items-center gap-2 shadow-lg shadow-devshare-blue/30 transition-all text-sm flex-shrink-0 ml-4"
         >
           <Plus className="w-4 h-4" />
